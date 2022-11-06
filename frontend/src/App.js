@@ -8,7 +8,7 @@ function App() {
 
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Tuder</title>
+                <title>Tudor</title>
                 <link rel="canonical" href="http://mysite.com/example" />
             </Helmet>
 
