@@ -135,8 +135,8 @@ app.post('/update_rating', function(req,res){
     // Find user by email (Assumes that email will be in database for now)
     usersModel.findOne({email: req.body.email})
     .then(function(account){
-        var cur_rating = parseInt(account.rating);
-        var cur_num_of_ratings = parseInt(account.num_of_ratings);
+        var cur_rating = parseFloat(account.rating);
+        var cur_num_of_ratings = parseFloat(account.num_of_ratings);
         // Get the new rating, recalcuate the average rating
         var cur_rating = cur_rating*cur_num_of_ratings + req.body.rating;
         cur_num_of_ratings++;
@@ -145,8 +145,8 @@ app.post('/update_rating', function(req,res){
         var cur_rating = rating/cur_num_of_ratings;
 
         // Update Mongoose Model
-        account.rating = cur_rating;
-        account.num_of_ratings = cur_num_of_ratings;
+        account.rating = toString(cur_rating);
+        account.num_of_ratings = toString(cur_num_of_ratings);
 
         account.markModified('rating');
         account.markModified('num_of_ratings');
