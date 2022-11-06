@@ -26,7 +26,7 @@ const PostRequest = () => {
       <form className='form' onSubmit={handleSubmit}>
         <div className='form-row'>
           <label htmlFor='name' className='form-label'>
-            name
+            Name
           </label>
           <input
             type='text'
@@ -38,7 +38,7 @@ const PostRequest = () => {
         </div>
         <div className='form-row'>
           <label htmlFor='email' className='form-label'>
-            email
+            Email
           </label>
           <input
             type='email'

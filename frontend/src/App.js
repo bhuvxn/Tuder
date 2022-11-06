@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import "./App.css";
 import PostRequest from "./components/PostRequest";
 import Home from "./components/Home"
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, useHistory} from 'react-router-dom'
 function App() {
   useEffect(() => {
     axios
@@ -21,8 +21,12 @@ function App() {
         </Route>
       </Routes>
       <Routes>
-      <Route path = '/signup' element = {<PostRequest/>} />
+        <Route path = '/signup' element = {<PostRequest/>} />
       </Routes>
+      <Routes>
+        <Route path = '/signin' element = {<SignIn/>} />
+      </Routes>
+
     </div>
     </BrowserRouter>
   );

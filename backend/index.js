@@ -131,7 +131,7 @@ app.post('/signin', function(req,res){
 });
 
 // Updates the rating of the user (req will have a new rating field)
-app.post('/update_rating', function(req,res){
+app.post('/update_rating', function(req,res, next){
     // Find user by email (Assumes that email will be in database for now)
     usersModel.findOne({email: req.body.email})
     .then(function(account){
@@ -151,11 +151,11 @@ app.post('/update_rating', function(req,res){
         account.markModified('rating');
         account.markModified('num_of_ratings');
 
-        account.save(function (err) {
-            if(err) {
-                console.error('ERROR SAVING RATING!');
-            }
-        });
+        account.save(function(err,post){
+            
+            if(err){return next (err)}
+            res.json(201, post)
+        })
     }) 
     .catch(function(err, account){
         if (err) {
