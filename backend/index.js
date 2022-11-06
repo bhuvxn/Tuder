@@ -24,22 +24,22 @@ app.listen(PORT,()=>{
 //route for searching for users with certain subjects from database
 app.get("/searchBySearch",(req,res)=>{
     // Use regex to find subject within the subject string
-    usersModel.find({"subjects":{"$regex": "science"}})
+    usersModel.find({"subjects":{"$regex": req.body.subjects}})
     .then(data =>{
         res.send(data)
     })
-    .catch(error =>{
+    .catch(err =>{
         res.status(500).send(err)
     })
 })
 
 //route for finding if a user exists, if yes, return the user
 app.get("/searchForUser",(req,res)=>{
-    usersModel.find({"user" : "bob"})
+    usersModel.find({"user" : {"$regex": req.body.user}})
     .then(data =>{
         res.send(data)
     })
-    .catch(error =>{
+    .catch(err =>{
         res.status(500).send(err)
     })
 })
@@ -53,5 +53,51 @@ app.get("/read",(req,res)=>{
         }
     })
 })
+
+// Checks for duplicate emails
+app.get("/signup", (req, res)=>{
+    // Email
+    usersModel.findOne({email: req.body.email})
+    .exec((err, email) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (email) {
+            res.status(400).send({ message: "Failed! Email is already in use!" });
+            return;
+        }
+        if (req.body.email === ""){
+            res.status(400).send({ message: "Failed! No Email Inputted" });
+            return;
+        }
+        if (req.body.password === ""){
+            res.status(400).send({ message: "Failed! No Password Inputted" });
+            return;
+        }
+        var userInstance = new usersModel({
+            user: "req.body.name",
+            email: req.body.email,
+            password: req.body.password,
+            rating: "0",
+            num_of_ratings: "0",
+            subjects: ",",
+        });
+
+        userInstance.save(function(err, user){
+            if (err){
+                res.status(500).send({ message: err });
+                return;
+            }
+            console.log("New user with email: %s has been successfully registered", req.body.email);
+        });
+    });  
+});
+
+app.get("/signin", (req, res)=>{
+
+})
+
+
 
 //route for posting data into database
