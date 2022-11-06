@@ -56,9 +56,8 @@ app.get("/read",(req,res)=>{
     })
 })
 
-// Checks for duplicate emails
-app.get("/signup", (req, res)=>{
-    // Email
+// Checks for duplicate emails, if no dupe, create new user instance and save to database
+app.post("/signup", async (req, res)=>{
     usersModel.findOne({email: req.body.email})
     .exec((err, email) => {
         if (err) {
@@ -101,8 +100,18 @@ app.get('/cors', (req, res) => {
     res.send({ "msg": "This has CORS enabled 🎈" })
     })
 app.get("/signin", (req, res)=>{
-
-})
+    usersModel.findOne({email: req.body.email})
+    .exec((err, email) => {
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (!email) {
+            res.status(400).send({ message: "Failed! Invalid Email!" });
+            return;
+        }
+    });
+});
 
 
 
