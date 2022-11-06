@@ -1,20 +1,35 @@
-import mongodb from "mongodb";
-import dotenv from "dotenv";
-import app from "./server.js";
-import usersDAO from "./usersDA0.js";
-async function main() {
-  dotenv.config();
-  const client = new mongodb.MongoClient(process.env.TUDER_DB_URL);
-  const port = process.env.PORT || 8000;
-  try {
-    // Connect to the MongoDB cluster
-    await client.connect();
-    app.listen(port, () => {
-      console.log("server is running on port:" + port);
-    });
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
+const mongoose = require("mongoose")
+const express = require("express")
+const usersModel = require("./models/users")
+const app = express()
+const  PORT = 3000
+const dbUrl = "mongodb+srv://bhuvan:1234@cluster0.n2tcltq.mongodb.net/tuderuser?retryWrites=true&w=majority"
+
+
+
+const connectionParams = {
+    useNewUrlParser: true,
 }
-main().catch(console.error);
+
+mongoose.connect(dbUrl, connectionParams).then(()=>{
+    console.info("connected to db")
+}).catch((e)=>{
+    console.log("error", e)
+})
+
+app.listen(PORT,()=>{
+    console.log('listening in PORT:${PORT}');
+})
+
+
+
+
+app.get("/read",(req,res)=>{
+    usersModel.find((err,data)=>{
+        if(err){
+        return res.status(500).send(err)
+        }else{
+            return res.status(200).send(data)
+        }
+    })
+})
