@@ -21,18 +21,28 @@ app.listen(PORT,()=>{
     console.log('listening in PORT:${PORT}');
 })
 
-//route for adding new user to database
-
-//route for searching according to param data from database
-app.get("/search",(req,res)=>{
+//route for searching for users with certain subjects from database
+app.get("/searchBySearch",(req,res)=>{
+    // Use regex to find subject within the subject string
     usersModel.find({"subjects":{"$regex": "science"}})
     .then(data =>{
         res.send(data)
     })
+    .catch(error =>{
+        res.status(500).send(err)
+    })
 })
 
-//route for finding by user 
-
+//route for finding if a user exists, if yes, return the user
+app.get("/searchForUser",(req,res)=>{
+    usersModel.find({"user" : "bob"})
+    .then(data =>{
+        res.send(data)
+    })
+    .catch(error =>{
+        res.status(500).send(err)
+    })
+})
 
 app.get("/read",(req,res)=>{
     usersModel.find((err,data)=>{
