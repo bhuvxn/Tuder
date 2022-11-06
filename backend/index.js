@@ -1,26 +1,20 @@
-import app from './server.js' //importing app from server
-import mongodb from "mongodb" //importing mongodb   
-import dotenv from "dotenv"
-
-async function main(){
-
-    dotenv.config()
-    const client = new mongodb.MongoClient(
-        process.env.TUDER_DB_URL
-    )
-    const port = process.env.PORT||8000
-
-    try{
-        //connecting to our mongodb database
-        await client.connect()
-        app.listen(port, ()=>{
-            console.log('backend server is running on port' + port)
-        })
-    }catch(e){
-        console.error(e);
-        process.exit(1)
-    }
+import mongodb from "mongodb";
+import dotenv from "dotenv";
+import app from "./server.js";
+import usersDAO from "./usersDA0.js";
+async function main() {
+  dotenv.config();
+  const client = new mongodb.MongoClient(process.env.TUDER_DB_URL);
+  const port = process.env.PORT || 8000;
+  try {
+    // Connect to the MongoDB cluster
+    await client.connect();
+    app.listen(port, () => {
+      console.log("server is running on port:" + port);
+    });
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 }
-
-
-main().catch(console.error)
+main().catch(console.error);
