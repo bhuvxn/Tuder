@@ -2,10 +2,12 @@ const mongoose = require("mongoose")
 const express = require("express")
 const usersModel = require("./models/users")
 const app = express()
-const  PORT = 3000
+const PORT = 5000
 const dbUrl = "mongodb+srv://bhuvan:1234@cluster0.n2tcltq.mongodb.net/tuderuser?retryWrites=true&w=majority"
-
-
+var cors = require('cors')
+app.use(cors({
+    origin: '*'
+}));
 
 const connectionParams = {
     useNewUrlParser: true,
@@ -94,6 +96,10 @@ app.get("/signup", (req, res)=>{
     });  
 });
 
+app.get('/cors', (req, res) => {
+    res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.send({ "msg": "This has CORS enabled 🎈" })
+    })
 app.get("/signin", (req, res)=>{
 
 })
