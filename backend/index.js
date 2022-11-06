@@ -81,33 +81,44 @@ app.post('/signup', function(req,res,next){
             return;
         }
     
-    var userInserted = new usersModel({
-        user: req.body.user,
-        email: req.body.email,
-        password: req.body.password,
-        rating: "0",
-        num_of_ratings: "0",
-        subjects: ","
+        var userInserted = new usersModel({
+            user: req.body.user,
+            email: req.body.email,
+            password: req.body.password,
+            rating: "0",
+            num_of_ratings: "0",
+            subjects: ","
 
+        })
+
+    
+
+        userInserted.save(function(err,post){
+            
+            if(err){return next (err)}
+            res.json(201, post)
+        })
     })
-
-   
-
-    userInserted.save(function(err,post){
-        
-        if(err){return next (err)}
-        res.json(201, post)
-    })
-})
 })
 
 app.get('/cors', (req, res) => {
     res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.send({ "msg": "This has CORS enabled 🎈" })
-    })
-app.get("/signin", (req, res)=>{
+})
+
+app.post('/signin', function(req,res){
+    // Find user by email (Assumes that email will be in database for now)
     usersModel.findOne({email: req.body.email})
-    .exec((err, email) => {
+    .then(function(email){
+        if (email.password != req.body.password){
+            res.status(400).send({message: "Failed! Invalid Password"});
+            return
+        }
+        else{
+            return res.status(200).send(email);
+        }
+    })  
+    .catch(function(err, email){
         if (err) {
             res.status(500).send({ message: err });
             return;
