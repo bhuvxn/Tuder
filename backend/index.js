@@ -5,6 +5,9 @@ const app = express()
 const PORT = 5000
 const dbUrl = "mongodb+srv://bhuvan:1234@cluster0.n2tcltq.mongodb.net/tuderuser?retryWrites=true&w=majority"
 var cors = require('cors')
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({
     origin: '*'
 }));
@@ -57,7 +60,8 @@ app.get("/read",(req,res)=>{
 })
 
 // Checks for duplicate emails, if no dupe, create new user instance and save to database
-app.post("/signup", async (req, res)=>{
+app.post('/signup', function(req,res,next){
+
     usersModel.findOne({email: req.body.email})
     .exec((err, email) => {
         if (err) {
@@ -76,24 +80,26 @@ app.post("/signup", async (req, res)=>{
             res.status(400).send({ message: "Failed! No Password Inputted" });
             return;
         }
-        var userInstance = new usersModel({
-            user: "req.body.name",
-            email: req.body.email,
-            password: req.body.password,
-            rating: "0",
-            num_of_ratings: "0",
-            subjects: ",",
-        });
+    
+    var userInserted = new usersModel({
+        user: req.body.user,
+        email: req.body.email,
+        password: req.body.password,
+        rating: "0",
+        num_of_ratings: "0",
+        subjects: ","
 
-        userInstance.save(function(err, user){
-            if (err){
-                res.status(500).send({ message: err });
-                return;
-            }
-            console.log("New user with email: %s has been successfully registered", req.body.email);
-        });
-    });  
-});
+    })
+
+   
+
+    userInserted.save(function(err,post){
+        
+        if(err){return next (err)}
+        res.json(201, post)
+    })
+})
+})
 
 app.get('/cors', (req, res) => {
     res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
