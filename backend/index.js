@@ -21,7 +21,17 @@ app.listen(PORT,()=>{
     console.log('listening in PORT:${PORT}');
 })
 
+//route for adding new user to database
 
+//route for searching according to param data from database
+app.get("/search",(req,res)=>{
+    usersModel.find({"subjects":{"$regex": "science"}})
+    .then(data =>{
+        res.send(data)
+    })
+})
+
+//route for finding by user 
 
 
 app.get("/read",(req,res)=>{
@@ -33,3 +43,5 @@ app.get("/read",(req,res)=>{
         }
     })
 })
+
+//route for posting data into database

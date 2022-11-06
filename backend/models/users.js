@@ -29,5 +29,6 @@ const usersSchema= new mongoose.Schema({
     },
 })
 
+usersSchema.index({'$**': 'text'});
 const usersModel = mongoose.model('users', usersSchema)
 module.exports = usersModel
