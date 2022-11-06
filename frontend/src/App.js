@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import "./App.css";
 import PostRequest from "./components/PostRequest";
 import Home from "./components/Home"
+import SignIn from "./components/SignIn"
 import {BrowserRouter, Routes, Route, useHistory} from 'react-router-dom'
 function App() {
   useEffect(() => {
@@ -17,8 +18,7 @@ function App() {
     <BrowserRouter>
     <div className="App">
       <Routes>
-        <Route exact path = '/' element = {<Home/>}>
-        </Route>
+        <Route path = '/' element = {<Home/>}/>
       </Routes>
       <Routes>
         <Route path = '/signup' element = {<PostRequest/>} />
