@@ -77,7 +77,7 @@ app.post("/signup", async (req, res)=>{
             return;
         }
         var userInstance = new usersModel({
-            user: "req.body.name",
+            user: req.body.user,
             email: req.body.email,
             password: req.body.password,
             rating: "0",
