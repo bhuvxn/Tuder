@@ -109,21 +109,60 @@ app.get('/cors', (req, res) => {
 app.post('/signin', function(req,res){
     // Find user by email (Assumes that email will be in database for now)
     usersModel.findOne({email: req.body.email})
-    .then(function(email){
-        if (email.password != req.body.password){
+    .then(function(account){
+        if (account.password != req.body.password){
             res.status(400).send({message: "Failed! Invalid Password"});
             return
         }
         else{
-            return res.status(200).send(email);
+            return res.status(200).send(account);
         }
     })  
-    .catch(function(err, email){
+    .catch(function(err, account){
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
-        if (!email) {
+        if (!account) {
+            res.status(400).send({ message: "Failed! Invalid Email!" });
+            return;
+        }
+    });
+});
+
+// Updates the rating of the user (req will have a new rating field)
+app.post('/update_rating', function(req,res){
+    // Find user by email (Assumes that email will be in database for now)
+    usersModel.findOne({email: req.body.email})
+    .then(function(account){
+        var cur_rating = parseInt(account.rating);
+        var cur_num_of_ratings = parseInt(account.num_of_ratings);
+        // Get the new rating, recalcuate the average rating
+        var cur_rating = cur_rating*cur_num_of_ratings + req.body.rating;
+        cur_num_of_ratings++;
+
+        // New Rating 
+        var cur_rating = rating/cur_num_of_ratings;
+
+        // Update Mongoose Model
+        account.rating = cur_rating;
+        account.num_of_ratings = cur_num_of_ratings;
+
+        account.markModified('rating');
+        account.markModified('num_of_ratings');
+
+        account.save(function (err) {
+            if(err) {
+                console.error('ERROR SAVING RATING!');
+            }
+        });
+    }) 
+    .catch(function(err, account){
+        if (err) {
+            res.status(500).send({ message: err });
+            return;
+        }
+        if (!account) {
             res.status(400).send({ message: "Failed! Invalid Email!" });
             return;
         }
